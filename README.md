@@ -5,6 +5,7 @@ A FastAPI application that creates Reddit posts through a simple API interface. 
 ## Features
 
 - Create Reddit posts via API
+- Support for Markdown formatting
 - FastAPI with automatic OpenAPI documentation
 - Docker containerization
 - Built for Coolify deployment
@@ -76,22 +77,88 @@ docker run -p 8000:8000 --env-file .env reddit-poster
    - Add the environment variables
    - Deploy
 
-## API Endpoints
+## API Usage
+
+### Endpoints
 
 - `GET /health` - Health check endpoint
 - `POST /post` - Create a Reddit post
 - `GET /docs` - Interactive API documentation
 
-### Create Post Example
+### Creating Posts
 
+The API accepts form data with the following fields:
+- `subreddit` (required): The name of the subreddit to post to
+- `title` (required): The title of your post
+- `text` (optional): The content of your post in Markdown format
+
+#### Example using curl:
 ```bash
 curl -X POST http://your-domain/post \
-  -H "Content-Type: application/json" \
-  -d '{
+  -F "subreddit=test" \
+  -F "title=Test Post" \
+  -F "text=Hello Reddit! This is a **bold** test."
+```
+
+#### Example using Python requests:
+```python
+import requests
+
+url = "http://your-domain/post"
+data = {
     "subreddit": "test",
     "title": "Test Post",
-    "text": "Hello Reddit!"
-  }'
+    "text": "Hello Reddit! This is a **bold** test."
+}
+response = requests.post(url, data=data)
+print(response.json())
+```
+
+### Markdown Formatting Guide
+
+Your post content (text field) supports Reddit's Markdown formatting:
+
+#### Basic Formatting
+```markdown
+# Heading 1
+## Heading 2
+
+**Bold text**
+*Italic text*
+
+* Bullet point
+* Another point
+
+1. Numbered list
+2. Second item
+
+[Link text](https://example.com)
+
+> Quote block
+```
+
+#### Code Blocks
+\```python
+def hello():
+    print("Hello Reddit!")
+\```
+
+#### Tables
+```markdown
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1   | Cell 2   |
+```
+
+#### Images
+```markdown
+![Image description](https://example.com/image.jpg)
+```
+
+#### Reddit-Specific Features
+```markdown
+Spoiler tags: >!hidden text!<
+Superscript: ^(small text)
 ```
 
 ## License

@@ -1,8 +1,8 @@
 import os
 from typing import Optional
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, Form
+from fastapi.responses import JSONResponse
 import praw
 
 # Load environment variables
@@ -14,11 +14,6 @@ app = FastAPI(
     description="API for creating Reddit posts",
     version="1.0.0"
 )
-
-class RedditPost(BaseModel):
-    subreddit: str
-    title: str
-    text: Optional[str] = ""
 
 # Initialize Reddit API client
 def get_reddit_client():
@@ -36,21 +31,51 @@ async def health_check():
     return {"status": "healthy"}
 
 @app.post("/post")
-async def create_post(post: RedditPost):
-    """Create a new Reddit post"""
+async def create_post(
+    subreddit: str = Form(...),
+    title: str = Form(...),
+    text: Optional[str] = Form(default="")
+):
+    """Create a new Reddit post
+    
+    Args:
+        subreddit: Name of the subreddit to post to
+        title: Title of the post
+        text: Content of the post in Markdown format (optional)
+    """
     try:
+        # Validate inputs
+        if not subreddit or not title:
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Subreddit and title are required"}
+            )
+
+        # Clean up the text content
+        text = text.strip() if text else ""
+
         # Submit the post
         reddit = get_reddit_client()
-        subreddit = reddit.subreddit(post.subreddit)
-        submission = subreddit.submit(post.title, selftext=post.text)
-
-        return {
-            "message": "Post created successfully!",
-            "submission_url": submission.url
-        }
+        subreddit = reddit.subreddit(subreddit)
+        
+        try:
+            submission = subreddit.submit(title, selftext=text)
+            return {
+                "message": "Post created successfully!",
+                "submission_url": submission.url
+            }
+        except praw.exceptions.RedditAPIException as e:
+            error_messages = [f"{error.error_type}: {error.message}" for error in e.items]
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Reddit API Error", "details": error_messages}
+            )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return JSONResponse(
+            status_code=500,
+            content={"error": "Internal server error", "details": str(e)}
+        )
 
 if __name__ == "__main__":
     import uvicorn
