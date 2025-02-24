@@ -5,6 +5,10 @@ This is for Testing!  See: https://github.com/Frickerdude78/reddit_poster_V1_Aut
 
 A FastAPI application that creates Reddit posts through a simple API interface. Built for deployment on Coolify.
 
+See the video here:
+https://youtu.be/Ngxq-NJc7co
+
+
 ## Features
 
 - Create Reddit posts via API
