@@ -1,4 +1,7 @@
-# Reddit Poster API
+# Reddit Poster API 
+
+This is for Testing!  See: for a secure app)
+
 
 A FastAPI application that creates Reddit posts through a simple API interface. Built for deployment on Coolify.
 
@@ -7,14 +10,12 @@ A FastAPI application that creates Reddit posts through a simple API interface. 
 - Create Reddit posts via API
 - Support for Markdown formatting
 - FastAPI with automatic OpenAPI documentation
-- Docker containerization
 - Built for Coolify deployment
 
 ## Prerequisites
 
 - Reddit Account
 - Reddit App (create one at [Reddit App Preferences](https://www.reddit.com/prefs/apps))
-- Docker (if running locally)
 - Coolify instance (for deployment)
 
 ### Creating a Reddit App
