@@ -1,6 +1,6 @@
 # Reddit Poster API 
 
-This is for Testing!  See: for a secure app)
+This is for Testing!  See: https://github.com/Frickerdude78/reddit_poster_V1_Auth for a secure app
 
 
 A FastAPI application that creates Reddit posts through a simple API interface. Built for deployment on Coolify.
