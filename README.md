@@ -72,7 +72,7 @@ docker run -p 8000:8000 --env-file .env reddit-poster
 
 1. Push this repository to GitHub
 2. In Coolify dashboard:
-   - Create a new service
+   - Create a new Project
    - Select this repository
    - Set build configuration to use Dockerfile
    - Add the environment variables
